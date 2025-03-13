@@ -1,0 +1,55 @@
+const quizData = [
+    { question: "What is the capital of France?", options: ["Berlin", "Madrid", "Paris", "Rome"], answer: "Paris" },
+    { question: "Which language runs in a web browser?", options: ["Java", "C", "Python", "JavaScript"], answer: "JavaScript" },
+    { question: "What does CSS stand for?", options: ["Central Style Sheets", "Cascading Style Sheets", "Coded Style Sheets", "Creative Style Sheets"], answer: "Cascading Style Sheets" }
+];
+
+let currentQuestionIndex = 0;
+let score = 0;
+
+const questionElement = document.getElementById("question");
+const optionsElement = document.getElementById("options");
+const nextButton = document.getElementById("next");
+const resultElement = document.getElementById("result");
+
+function loadQuestion() {
+    const currentQuestion = quizData[currentQuestionIndex];
+    questionElement.innerText = currentQuestion.question;
+    optionsElement.innerHTML = "";
+    
+    currentQuestion.options.forEach(option => {
+        const button = document.createElement("button");
+        button.innerText = option;
+        button.classList.add("option-btn");
+        button.onclick = () => checkAnswer(option);
+        optionsElement.appendChild(button);
+    });
+}
+
+function checkAnswer(selectedAnswer) {
+    const correctAnswer = quizData[currentQuestionIndex].answer;
+    if (selectedAnswer === correctAnswer) {
+        score++;
+        resultElement.innerText = "Correct!";
+        resultElement.style.color = "green";
+    } else {
+        resultElement.innerText = "Wrong! The correct answer is " + correctAnswer;
+        resultElement.style.color = "red";
+    }
+    nextButton.style.display = "block";
+}
+
+nextButton.addEventListener("click", () => {
+    currentQuestionIndex++;
+    if (currentQuestionIndex < quizData.length) {
+        loadQuestion();
+        resultElement.innerText = "";
+        nextButton.style.display = "none";
+    } else {
+        questionElement.innerText = "Quiz Completed! Your score: " + score + "/" + quizData.length;
+        optionsElement.innerHTML = "";
+        nextButton.style.display = "none";
+    }
+});
+
+loadQuestion();
