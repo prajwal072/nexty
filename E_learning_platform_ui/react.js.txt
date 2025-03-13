@@ -1,0 +1,67 @@
+import React from "react";
+import { BrowserRouter as Router, Route, Routes, Link } from "react-router-dom";
+import { Card, CardContent } from "@/components/ui/card";
+import { Button } from "@/components/ui/button";
+
+const courses = [
+  { id: 1, title: "React for Beginners", progress: "50%", video: "https://www.youtube.com/embed/dGcsHMXbSOA" },
+  { id: 2, title: "Advanced JavaScript", progress: "20%", video: "https://www.youtube.com/embed/NCwa_xi0Uuc" },
+  { id: 3, title: "CSS Animations", progress: "75%", video: "https://www.youtube.com/embed/AdNJ3fydeao" }
+];
+
+const Home = () => (
+  <div className="p-8 text-center">
+    <h1 className="text-3xl font-bold mb-6">Welcome to E-Learning Platform</h1>
+    <Link to="/courses">
+      <Button className="px-4 py-2 bg-blue-500 text-white rounded-md">Browse Courses</Button>
+    </Link>
+  </div>
+);
+
+const CourseList = () => (
+  <div className="p-8">
+    <h2 className="text-2xl font-semibold mb-4">Available Courses</h2>
+    <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+      {courses.map((course) => (
+        <Card key={course.id} className="p-4">
+          <CardContent>
+            <h3 className="text-xl font-medium">{course.title}</h3>
+            <p className="text-gray-600">Progress: {course.progress}</p>
+            <Link to={`/course/${course.id}`}>
+              <Button className="mt-3 px-3 py-1 bg-green-500 text-white rounded">View Course</Button>
+            </Link>
+          </CardContent>
+        </Card>
+      ))}
+    </div>
+  </div>
+);
+
+const CourseDetail = ({ courseId }) => {
+  const course = courses.find((c) => c.id === parseInt(courseId));
+  if (!course) return <p>Course not found</p>;
+
+  return (
+    <div className="p-8">
+      <h2 className="text-2xl font-semibold">{course.title}</h2>
+      <p className="text-gray-600 mb-4">Progress: {course.progress}</p>
+      <div className="w-full max-w-3xl">
+        <iframe className="w-full h-64" src={course.video} frameBorder="0" allowFullScreen></iframe>
+      </div>
+    </div>
+  );
+};
+
+const App = () => {
+  return (
+    <Router>
+      <Routes>
+        <Route path="/" element={<Home />} />
+        <Route path="/courses" element={<CourseList />} />
+        <Route path="/course/:id" element={({ match }) => <CourseDetail courseId={match.params.id} />} />
+      </Routes>
+    </Router>
+  );
+};
+
+export default App;
